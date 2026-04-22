@@ -1,0 +1,54 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "quick-capture-cli"
+version = "0.1.0"
+description = "Fast, frictionless capture for Logseq daily notes"
+readme = "README.md"
+license = {text = "AGPL-3.0"}
+authors = [{name = "Midtown Technology Group", email = "info@midtowntg.com"}]
+requires-python = ">=3.10"
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "License :: OSI Approved :: GNU Affero General Public License v3",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+dependencies = [
+    "typer>=0.9.0",
+    "rich>=13.0.0",
+    "pydantic>=2.0.0",
+    "filelock>=3.12.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "black>=23.0.0",
+    "ruff>=0.1.0",
+]
+
+[project.scripts]
+qc = "quick_capture.cli:main"
+qcapture = "quick_capture.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/Midtown-Technology-Group/quick-capture-cli"
+Documentation = "https://github.com/Midtown-Technology-Group/quick-capture-cli#readme"
+Repository = "https://github.com/Midtown-Technology-Group/quick-capture-cli"
+Issues = "https://github.com/Midtown-Technology-Group/quick-capture-cli/issues"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.black]
+line-length = 100
+target-version = ['py310']
+
+[tool.ruff]
+line-length = 100
+select = ["E", "F", "I", "W"]
