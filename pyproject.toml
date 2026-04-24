@@ -7,7 +7,7 @@ name = "quick-capture"
 version = "0.1.0"
 description = "Fast, frictionless capture for Logseq daily notes"
 readme = "README.md"
-license = {text = "AGPL-3.0"}
+license = {text = "AGPL-3.0-or-later"}
 authors = [{name = "Midtown Technology Group", email = "info@midtowntg.com"}]
 requires-python = ">=3.10"
 classifiers = [
