@@ -1,5 +1,5 @@
 """
-Core capture functionality for Quick Capture CLI.
+Core capture functionality for Quick Capture.
 
 Handles appending captures to daily notes with proper formatting and section awareness.
 """

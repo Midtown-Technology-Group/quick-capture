@@ -1,5 +1,5 @@
 """
-Configuration models for Quick Capture CLI.
+Configuration models for Quick Capture.
 
 Shares config file with work-context-sync for vault path and timezone.
 """

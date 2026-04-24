@@ -33,8 +33,9 @@ dev = [
 ]
 
 [project.scripts]
-qc = "quick_capture.cli:main"
-qcapture = "quick_capture.cli:main"
+quick-capture = "quick_capture.main:main"
+qc = "quick_capture.main:main"
+qcapture = "quick_capture.main:main"
 
 [project.urls]
 Homepage = "https://github.com/Midtown-Technology-Group/quick-capture"

@@ -1,5 +1,5 @@
 """
-CLI interface for Quick Capture CLI.
+Command interface for Quick Capture.
 
 Provides commands for capturing tasks, ideas, notes, and logs to Logseq daily notes.
 """
@@ -41,7 +41,7 @@ def main(
         help="Show version and exit",
     ),
 ):
-    """Quick Capture CLI - Fast capture for Logseq daily notes."""
+    """Quick Capture - Fast capture for Logseq daily notes."""
     pass
 
 
@@ -209,6 +209,6 @@ def config():
     ))
 
 
-def cli_main():
-    """Entry point for CLI."""
+def main():
+    """Entry point for Quick Capture."""
     app()

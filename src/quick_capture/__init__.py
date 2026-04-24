@@ -1,5 +1,5 @@
 """
-Quick Capture CLI - Fast, frictionless capture for Logseq daily notes.
+Quick Capture - Fast, frictionless capture for Logseq daily notes.
 
 Copyright (C) 2026 Midtown Technology Group LLC
 

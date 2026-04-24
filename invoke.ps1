@@ -1,5 +1,5 @@
 [#]
-# Quick Capture CLI - PowerShell Skill Wrapper
+# Quick Capture - PowerShell wrapper
 # Usage: .\invoke.ps1 [arguments...]
 #
 
@@ -9,7 +9,7 @@ param(
 )
 
 $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
-$pythonScript = Join-Path $scriptDir "src\quick_capture\cli.py"
+$pythonScript = Join-Path $scriptDir "src\quick_capture\main.py"
 
 # Check if we're in a virtual environment
 if ($env:VIRTUAL_ENV) {
@@ -27,5 +27,5 @@ if ($env:VIRTUAL_ENV) {
     $pythonCmd = $pythonCmd.Source
 }
 
-# Run the CLI
+# Run Quick Capture
 & $pythonCmd $pythonScript @Arguments
