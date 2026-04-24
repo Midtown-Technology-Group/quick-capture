@@ -1,11 +1,11 @@
-# Quick Capture CLI
+# Quick Capture
 
 Fast, frictionless capture for Logseq daily notes.
 
 ## Installation
 
 ```bash
-pip install quick-capture-cli
+pip install quick-capture
 ```
 
 ## Usage

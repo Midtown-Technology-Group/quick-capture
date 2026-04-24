@@ -3,7 +3,7 @@ requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "quick-capture-cli"
+name = "quick-capture"
 version = "0.1.0"
 description = "Fast, frictionless capture for Logseq daily notes"
 readme = "README.md"
@@ -37,10 +37,10 @@ qc = "quick_capture.cli:main"
 qcapture = "quick_capture.cli:main"
 
 [project.urls]
-Homepage = "https://github.com/Midtown-Technology-Group/quick-capture-cli"
-Documentation = "https://github.com/Midtown-Technology-Group/quick-capture-cli#readme"
-Repository = "https://github.com/Midtown-Technology-Group/quick-capture-cli"
-Issues = "https://github.com/Midtown-Technology-Group/quick-capture-cli/issues"
+Homepage = "https://github.com/Midtown-Technology-Group/quick-capture"
+Documentation = "https://github.com/Midtown-Technology-Group/quick-capture#readme"
+Repository = "https://github.com/Midtown-Technology-Group/quick-capture"
+Issues = "https://github.com/Midtown-Technology-Group/quick-capture/issues"
 
 [tool.setuptools.packages.find]
 where = ["src"]
