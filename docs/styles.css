@@ -1,0 +1,311 @@
+:root {
+    --primary: #6366f1;
+    --primary-dark: #4f46e5;
+    --secondary: #22d3ee;
+    --bg: #0f172a;
+    --bg-light: #1e293b;
+    --text: #f8fafc;
+    --text-muted: #94a3b8;
+    --border: #334155;
+    --radius: 12px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+.hero {
+    text-align: center;
+    padding: 100px 24px 80px;
+    background: linear-gradient(135deg, var(--bg) 0%, var(--bg-light) 100%);
+}
+
+.logo-mark {
+    width: 88px;
+    height: 88px;
+    margin: 0 auto 24px;
+    border-radius: 50%;
+    border: 3px solid currentColor;
+    color: var(--secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.5rem;
+    letter-spacing: 0.08em;
+}
+
+.hero h1 {
+    font-size: 3.5rem;
+    font-weight: 700;
+    margin-bottom: 16px;
+    background: linear-gradient(135deg, var(--text) 0%, var(--secondary) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.tagline {
+    font-size: 1.5rem;
+    color: var(--secondary);
+    font-weight: 500;
+    margin-bottom: 16px;
+}
+
+.description {
+    font-size: 1.125rem;
+    color: var(--text-muted);
+    max-width: 720px;
+    margin: 0 auto 32px;
+}
+
+.cta-buttons {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.btn {
+    padding: 14px 28px;
+    border-radius: var(--radius);
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.btn-primary {
+    background: var(--primary);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: var(--primary-dark);
+    transform: translateY(-2px);
+}
+
+.btn-secondary {
+    background: transparent;
+    color: var(--text);
+    border: 2px solid var(--border);
+}
+
+.btn-secondary:hover {
+    border-color: var(--secondary);
+    color: var(--secondary);
+}
+
+.features,
+.usage {
+    padding: 80px 0;
+}
+
+.install,
+.tech-stack {
+    padding: 80px 0;
+    background: var(--bg-light);
+}
+
+.features h2,
+.install h2,
+.usage h2,
+.tech-stack h2 {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 48px;
+}
+
+.feature-grid,
+.install-methods {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 32px;
+}
+
+.feature,
+.install-method {
+    background: var(--bg-light);
+    padding: 32px;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    transition: all 0.2s ease;
+}
+
+.install .feature,
+.install .install-method,
+.tech-stack .feature,
+.tech-stack .install-method {
+    background: var(--bg);
+}
+
+.feature:hover {
+    border-color: var(--primary);
+    transform: translateY(-4px);
+}
+
+.feature-icon {
+    font-size: 2rem;
+    margin-bottom: 16px;
+}
+
+.feature h3,
+.install-method h3 {
+    font-size: 1.25rem;
+    margin-bottom: 12px;
+}
+
+.feature p,
+.install-method p {
+    color: var(--text-muted);
+}
+
+.feature code,
+.step code {
+    background: rgba(148, 163, 184, 0.15);
+    padding: 2px 6px;
+    border-radius: 6px;
+    color: var(--secondary);
+}
+
+.code-block {
+    background: #000;
+    padding: 20px;
+    border-radius: 8px;
+    overflow-x: auto;
+}
+
+.code-block code {
+    font-family: "Fira Code", Consolas, monospace;
+    font-size: 0.85rem;
+    color: var(--text);
+    white-space: pre;
+    line-height: 1.8;
+}
+
+.workflow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    flex-wrap: wrap;
+}
+
+.step {
+    text-align: center;
+    max-width: 220px;
+}
+
+.step-number {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--primary);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.25rem;
+    margin: 0 auto 16px;
+}
+
+.step p {
+    color: var(--text-muted);
+}
+
+.step-arrow {
+    color: var(--primary);
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.stack-list {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.stack-item {
+    padding: 12px 24px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.stack-item:hover {
+    border-color: var(--secondary);
+    color: var(--secondary);
+}
+
+footer {
+    padding: 48px 0;
+    text-align: center;
+    border-top: 1px solid var(--border);
+}
+
+footer p {
+    color: var(--text-muted);
+    margin-bottom: 8px;
+}
+
+footer a {
+    color: var(--secondary);
+    text-decoration: none;
+}
+
+.footer-links {
+    display: flex;
+    gap: 24px;
+    justify-content: center;
+    margin-top: 24px;
+}
+
+.footer-links a {
+    color: var(--text-muted);
+    transition: color 0.2s ease;
+}
+
+.footer-links a:hover {
+    color: var(--text);
+}
+
+@media (max-width: 768px) {
+    .hero h1 {
+        font-size: 2.5rem;
+    }
+
+    .tagline {
+        font-size: 1.25rem;
+    }
+
+    .install-methods {
+        grid-template-columns: 1fr;
+    }
+
+    .workflow {
+        flex-direction: column;
+    }
+
+    .step-arrow {
+        transform: rotate(90deg);
+    }
+}

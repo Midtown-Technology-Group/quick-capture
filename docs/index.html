@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quick Capture | Fast Logseq Intake</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="hero">
+        <div class="container">
+            <div class="logo-mark">QC</div>
+            <h1>Quick Capture</h1>
+            <p class="tagline">Fast, low-friction capture for Logseq daily notes.</p>
+            <p class="description">Turn quick thoughts, tasks, ideas, and work-log fragments into structured notes without opening your graph, switching context, or breaking flow.</p>
+            <div class="cta-buttons">
+                <a href="https://github.com/Midtown-Technology-Group/quick-capture" class="btn btn-primary">View on GitHub</a>
+                <a href="#install" class="btn btn-secondary">Get Started</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="features">
+            <div class="container">
+                <h2>Features</h2>
+                <div class="feature-grid">
+                    <div class="feature">
+                        <div class="feature-icon">⚡</div>
+                        <h3>One-Line Capture</h3>
+                        <p>Use <code>qc</code> for fast intake when you want the note recorded before the thought disappears.</p>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">🧭</div>
+                        <h3>Typed Intake</h3>
+                        <p>Route captures into tasks, ideas, notes, or work logs with lightweight commands and section mapping.</p>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">🧩</div>
+                        <h3>Shared Config</h3>
+                        <p>Uses the same knowledge-vault configuration shape as <code>context-sync</code>, so onboarding stays compact.</p>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">📝</div>
+                        <h3>Daily Note Native</h3>
+                        <p>Writes directly into Logseq-friendly markdown with aliases, timestamps, and sensible section defaults.</p>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">🔁</div>
+                        <h3>Short Command Aliases</h3>
+                        <p>Keep <code>quick-capture</code> for clarity and <code>qc</code> for speed without maintaining two separate tools.</p>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">🧰</div>
+                        <h3>Unix-Sized</h3>
+                        <p>One tool, one job: fast capture into your notes, without trying to become a whole knowledge system.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="install" id="install">
+            <div class="container">
+                <h2>Installation</h2>
+                <div class="install-methods">
+                    <div class="install-method">
+                        <h3>Quick Start</h3>
+                        <div class="code-block"><code>git clone https://github.com/Midtown-Technology-Group/quick-capture.git
+cd quick-capture
+python -m pip install -e .
+
+# then use either command
+quick-capture --help
+qc --help</code></div>
+                    </div>
+                    <div class="install-method">
+                        <h3>Shared Config</h3>
+                        <div class="code-block"><code>qcapture:
+  aliases:
+    bifrost: "[[projects/bifrost]]"
+    sarah: "@Sarah"</code></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="usage">
+            <div class="container">
+                <h2>Daily Workflow</h2>
+                <div class="workflow">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <p>Capture a task, thought, or note the moment it appears.</p>
+                    </div>
+                    <div class="step-arrow">→</div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <p>Let Quick Capture map it into the right daily-note section.</p>
+                    </div>
+                    <div class="step-arrow">→</div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <p>Review and process later inside Logseq when you have context.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="tech-stack">
+            <div class="container">
+                <h2>Built With</h2>
+                <div class="stack-list">
+                    <a href="https://www.python.org/" class="stack-item">Python</a>
+                    <a href="https://typer.tiangolo.com/" class="stack-item">Typer</a>
+                    <a href="https://logseq.com/" class="stack-item">Logseq</a>
+                    <a href="https://github.com/tox-dev/filelock" class="stack-item">FileLock</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>Built by <a href="https://midtowntg.com">Midtown Technology Group</a></p>
+            <p>Open source under AGPL-3.0</p>
+            <div class="footer-links">
+                <a href="https://github.com/Midtown-Technology-Group/quick-capture">GitHub</a>
+                <a href="https://github.com/Midtown-Technology-Group/quick-capture/issues">Issues</a>
+                <a href="https://github.com/Midtown-Technology-Group/quick-capture/blob/main/README.md">Readme</a>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

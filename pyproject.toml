@@ -38,8 +38,8 @@ qc = "quick_capture.main:main"
 qcapture = "quick_capture.main:main"
 
 [project.urls]
-Homepage = "https://github.com/Midtown-Technology-Group/quick-capture"
-Documentation = "https://github.com/Midtown-Technology-Group/quick-capture#readme"
+Homepage = "https://midtown-technology-group.github.io/quick-capture/"
+Documentation = "https://midtown-technology-group.github.io/quick-capture/"
 Repository = "https://github.com/Midtown-Technology-Group/quick-capture"
 Issues = "https://github.com/Midtown-Technology-Group/quick-capture/issues"
 

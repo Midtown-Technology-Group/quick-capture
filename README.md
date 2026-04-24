@@ -2,6 +2,8 @@
 
 Fast, frictionless capture for Logseq daily notes.
 
+Project site: <https://midtown-technology-group.github.io/quick-capture/>
+
 ## Installation
 
 ```bash
