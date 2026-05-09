@@ -43,3 +43,7 @@ qcapture:
 ## License
 
 AGPL-3.0-or-later
+
+## Windows MSI
+
+Tagged releases build a per-machine Windows MSI that installs `quick-capture.exe` under `Program Files` and adds that install directory to the system PATH. Installing or uninstalling the MSI requires an elevated prompt.
