@@ -1,0 +1,41 @@
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+  <Package
+    Name="Quick Capture"
+    Manufacturer="Midtown Technology Group LLC"
+    Version="$(var.Version)"
+    UpgradeCode="{FB865677-0F82-5F39-A6D1-41E7603F5D29}"
+    InstallerVersion="500"
+    Scope="perMachine">
+
+    <SummaryInformation Description="Quick Capture installer" Manufacturer="Midtown Technology Group LLC" />
+    <MajorUpgrade DowngradeErrorMessage="A newer version of Quick Capture is already installed." />
+    <MediaTemplate EmbedCab="yes" />
+
+    <StandardDirectory Id="ProgramFiles64Folder">
+      <Directory Id="INSTALLROOT" Name="Midtown Technology Group">
+        <Directory Id="INSTALLFOLDER" Name="Quick Capture" />
+      </Directory>
+    </StandardDirectory>
+
+    <Feature Id="MainFeature" Title="Quick Capture" Level="1">
+      <ComponentGroupRef Id="ToolComponents" />
+    </Feature>
+
+    <ComponentGroup Id="ToolComponents" Directory="INSTALLFOLDER">
+      <Component Id="ToolExecutableComponent" Guid="*">
+        <File Id="ToolExecutable" Source="$(var.BinDir)\quick-capture.exe" KeyPath="yes" />
+      </Component>
+      <Component Id="PathComponent" Guid="{3BCF5FAA-C00B-5D01-B4B8-091C461B9D87}">
+        <CreateFolder />
+        <Environment
+          Id="ToolPathEntry"
+          Action="set"
+          Name="PATH"
+          Part="last"
+          Permanent="no"
+          System="yes"
+          Value="[INSTALLFOLDER]" />
+      </Component>
+    </ComponentGroup>
+  </Package>
+</Wix>
