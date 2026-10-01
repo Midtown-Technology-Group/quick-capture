@@ -4,7 +4,7 @@ Python/Typer CLI for capturing tasks, ideas, notes, and logs into Logseq daily n
 
 ## Development checks
 
-Use Python 3.10+ and a virtual environment: `python -m pip install -e ".[dev]"`. The manifest declares pytest/Black/Ruff, but this commit has no `tests/` files or test workflow; do not claim a test suite passed. Add meaningful tests around command validation and writer behavior when changing them, using temporary graph directories rather than personal notes.
+Use Python 3.10+ and a virtual environment: `python -m pip install -e ".[dev]"`. The manifest declares pytest/Black/Ruff, but this commit has no `tests/` files or test workflow; do not claim a test suite passed. When adding tests, run `python -m pytest`; its current no-tests exit is not a passing result. Manifest-backed style commands are `python -m black --check src` and `python -m ruff check src`; these are development checks, not claimed CI gates. Add meaningful command/writer tests using temporary graph directories rather than personal notes.
 
 Verify syntax against the actual Typer command, not the stale README positional examples: `qc capture "Review Q2 proposal" --type task` uses content as the positional argument and type as an option. `capture` accepts `--section` and `--date`; reject invalid capture types without writing a note.
 
