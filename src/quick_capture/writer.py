@@ -54,6 +54,9 @@ class CaptureWriter:
         Returns:
             Tuple of (file_path, formatted_entry)
         """
+        if capture_type not in self.TEMPLATES:
+            raise ValueError(f"Invalid capture type: {capture_type!r}")
+
         # Determine section
         if section is None:
             section = self.config.qcapture.section_mappings.get(capture_type, "Work Log")
@@ -79,7 +82,7 @@ class CaptureWriter:
         content = self._apply_aliases(content)
         
         # Get template
-        template = self.TEMPLATES.get(capture_type, self.TEMPLATES["note"])
+        template = self.TEMPLATES[capture_type]
         
         return template.format(time=time_str, content=content)
     
@@ -109,14 +112,18 @@ class CaptureWriter:
                 # Create new daily note
                 self._create_new_note(note_path)
             
-            # Read existing content
-            content = note_path.read_text(encoding="utf-8") if note_path.exists() else ""
-            
-            # Find or create section
-            new_content = self._insert_in_section(content, entry, section)
-            
-            # Write back
-            note_path.write_text(new_content, encoding="utf-8")
+            # Keep original newlines and leave the unchanged prefix on disk.
+            with note_path.open("r+", encoding="utf-8", newline="") as note:
+                content = note.read()
+                new_content = self._insert_in_section(content, entry, section)
+                offset = 0
+                while offset < len(content) and content[offset] == new_content[offset]:
+                    offset += 1
+                note.seek(0)
+                note.read(offset)
+                position = note.tell()
+                note.seek(position)
+                note.write(new_content[offset:])
     
     def _create_new_note(self, note_path: Path):
         """Create a new daily note with standard template."""
@@ -147,44 +154,57 @@ class CaptureWriter:
         If section doesn't exist, creates it.
         If section exists, appends entry at end of section.
         """
-        lines = content.split('\n')
-        
-        # Find section
-        section_idx = -1
-        next_section_idx = len(lines)
-        
+        newline = "\r\n" if "\r\n" in content else "\n"
+        lines = content.splitlines(keepends=True)
+        section_headers = set(self._section_header_indices(lines))
+        offset = 0
         for i, line in enumerate(lines):
-            if self._is_section_header(line, section):
-                section_idx = i
-                # Find next section
-                for j in range(i + 1, len(lines)):
-                    if line.startswith("## "):
-                        next_section_idx = j
+            if i in section_headers and self._is_section_header(line.rstrip("\r\n"), section):
+                insert_at = offset + len(line)
+                cursor = insert_at
+                for j, following in enumerate(lines[i + 1 :], start=i + 1):
+                    if j in section_headers:
                         break
-                break
-        
-        if section_idx == -1:
-            # Section doesn't exist, create it at end
-            content = content.rstrip()
-            if content:
-                content += "\n\n"
-            content += f"## {section}\n\n{entry}"
-            return content
-        
-        # Find last non-empty line in section
-        insert_idx = section_idx + 1
-        for i in range(section_idx + 1, next_section_idx):
-            if lines[i].strip():
-                insert_idx = i + 1
-        
-        # Insert entry
-        lines.insert(insert_idx, entry)
-        return '\n'.join(lines)
+                    cursor += len(following)
+                    if following.strip():
+                        insert_at = cursor
+                prefix = "" if content[:insert_at].endswith("\n") else newline
+                return content[:insert_at] + prefix + entry + newline + content[insert_at:]
+            offset += len(line)
+
+        # Add a missing section without stripping existing whitespace or content.
+        separator = "" if not content or content.endswith(newline * 2) else newline
+        if content and not content.endswith(newline):
+            separator += newline
+        return content + separator + f"## {section}{newline}{newline}{entry}{newline}"
     
+    def _section_header_indices(self, lines):
+        """Yield level-two ATX headings outside backtick and tilde fences."""
+        fence = None
+        for i, line in enumerate(lines):
+            line = line.rstrip("\r\n")
+            if fence is not None:
+                closing = re.fullmatch(r" {0,3}([`~]+)[ \t]*", line)
+                if (
+                    closing
+                    and len(closing[1]) >= len(fence)
+                    and set(closing[1]) == {fence[0]}
+                ):
+                    fence = None
+                continue
+            opening = re.fullmatch(r" {0,3}(`{3,}|~{3,})(.*)", line)
+            if opening and not (opening[1][0] == "`" and "`" in opening[2]):
+                fence = opening[1]
+                continue
+            if re.match(r"^ {0,3}##[ \t]+", line):
+                yield i
+        if fence is not None:
+            raise ValueError("Cannot safely capture into a journal with an unclosed code fence")
+
     def _is_section_header(self, line: str, section: str) -> bool:
-        """Check if line is a section header."""
+        """Match a complete section name, never a longer name with the same prefix."""
+        line = re.sub(r"[ \t]+#+[ \t]*$", "", line).lstrip(" ")
         pattern = self.SECTION_PATTERNS.get(section)
         if pattern:
-            return bool(pattern.match(line))
-        # Generic check for ## Section Name
-        return line.startswith(f"## {section}")
+            return bool(pattern.fullmatch(line.rstrip(" \t")))
+        return bool(re.fullmatch(r"##[ \t]+" + re.escape(section) + r"[ \t]*", line))
