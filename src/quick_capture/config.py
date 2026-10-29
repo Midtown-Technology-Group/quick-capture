@@ -4,6 +4,7 @@ Configuration models for Quick Capture.
 Shares config file with work-context-sync for vault path and timezone.
 """
 
+import re
 from pathlib import Path
 from typing import Dict, List, Optional
 from pydantic import BaseModel, Field, field_validator
@@ -67,7 +68,9 @@ class AppConfig(BaseSettings):
         """
         from datetime import datetime
         
-        if date_str:
+        if date_str is not None:
+            if not re.fullmatch(r"[0-9]{4}-[0-9]{2}-[0-9]{2}", date_str):
+                raise ValueError("Date must use YYYY-MM-DD format")
             date_obj = datetime.strptime(date_str, "%Y-%m-%d")
         else:
             date_obj = datetime.now()
