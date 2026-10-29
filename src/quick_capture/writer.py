@@ -156,13 +156,14 @@ class CaptureWriter:
         """
         newline = "\r\n" if "\r\n" in content else "\n"
         lines = content.splitlines(keepends=True)
+        section_headers = set(self._section_header_indices(lines))
         offset = 0
         for i, line in enumerate(lines):
-            if self._is_section_header(line.rstrip("\r\n"), section):
+            if i in section_headers and self._is_section_header(line.rstrip("\r\n"), section):
                 insert_at = offset + len(line)
                 cursor = insert_at
-                for following in lines[i + 1 :]:
-                    if re.match(r"^##[ \t]+", following):
+                for j, following in enumerate(lines[i + 1 :], start=i + 1):
+                    if j in section_headers:
                         break
                     cursor += len(following)
                     if following.strip():
@@ -177,8 +178,32 @@ class CaptureWriter:
             separator += newline
         return content + separator + f"## {section}{newline}{newline}{entry}{newline}"
     
+    def _section_header_indices(self, lines):
+        """Yield level-two ATX headings outside backtick and tilde fences."""
+        fence = None
+        for i, line in enumerate(lines):
+            line = line.rstrip("\r\n")
+            if fence is not None:
+                closing = re.fullmatch(r" {0,3}([`~]+)[ \t]*", line)
+                if (
+                    closing
+                    and len(closing[1]) >= len(fence)
+                    and set(closing[1]) == {fence[0]}
+                ):
+                    fence = None
+                continue
+            opening = re.fullmatch(r" {0,3}(`{3,}|~{3,})(.*)", line)
+            if opening and not (opening[1][0] == "`" and "`" in opening[2]):
+                fence = opening[1]
+                continue
+            if re.match(r"^ {0,3}##[ \t]+", line):
+                yield i
+        if fence is not None:
+            raise ValueError("Cannot safely capture into a journal with an unclosed code fence")
+
     def _is_section_header(self, line: str, section: str) -> bool:
         """Match a complete section name, never a longer name with the same prefix."""
+        line = re.sub(r"[ \t]+#+[ \t]*$", "", line).lstrip(" ")
         pattern = self.SECTION_PATTERNS.get(section)
         if pattern:
             return bool(pattern.fullmatch(line.rstrip(" \t")))

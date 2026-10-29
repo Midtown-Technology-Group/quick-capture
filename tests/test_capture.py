@@ -131,3 +131,72 @@ def test_concurrent_captures_keep_every_entry(config):
     content = results[0][0].read_text(encoding="utf-8")
     for _, entry in results:
         assert content.count(entry + "\n") == 1
+
+
+@pytest.mark.parametrize("newline", ["\n", "\r\n"])
+@pytest.mark.parametrize("fence", ["```", "~~~~", "`````"])
+def test_fenced_fake_target_and_boundary_do_not_receive_capture(config, newline, fence):
+    original = (
+        f"{fence}markdown\n## Notes\n- fake target\n{fence}\n\n"
+        f"## Notes ##\n- parent\n{fence}\n## Links\n- code\n{fence}\n"
+        "- last real block\n\n## Links ##\n- untouched\n"
+    ).replace("\n", newline)
+    path = config.get_today_note_path("2026-10-29")
+    path.parent.mkdir(parents=True)
+    path.write_bytes(original.encode())
+    _, entry = CaptureWriter(config).capture("new", date_str="2026-10-29")
+    expected = original.replace(
+        f"- last real block{newline}", f"- last real block{newline}{entry}{newline}"
+    )
+    assert path.read_bytes() == expected.encode()
+
+
+@pytest.mark.parametrize("section", ["Notes", "Custom"])
+def test_atx_closing_hashes_match_exact_section_only(config, section):
+    original = f"## {section}Extra ##\n- keep\n## {section} ###  \n- old\n## Links\n"
+    expected = original.replace("- old\n", "- old\n- new\n")
+    assert CaptureWriter(config)._insert_in_section(original, "- new", section) == expected
+
+
+@pytest.mark.parametrize(
+    "fence,wrong,close",
+    [
+        ("````", "```", "`````"),
+        ("~~~~", "~~~", "~~~~~"),
+        ("```", "~~~", "```"),
+        ("~~~", "```", "~~~"),
+        ("```", "``` not closing", "```"),
+    ],
+)
+def test_only_matching_fence_of_sufficient_length_closes(config, fence, wrong, close):
+    original = (
+        f"## Notes\n{fence}\n{wrong}\n## Links\n- code\n{close}\n"
+        "- after code\n## Links\n- keep\n"
+    )
+    expected = original.replace("- after code\n", "- after code\n- new\n")
+    assert CaptureWriter(config)._insert_in_section(original, "- new", "Notes") == expected
+
+
+def test_short_fences_are_not_code_blocks(config):
+    original = "``\n## Notes\n- old\n~~\n## Links\n- keep\n"
+    expected = original.replace("~~\n", "~~\n- new\n")
+    assert CaptureWriter(config)._insert_in_section(original, "- new", "Notes") == expected
+
+
+@pytest.mark.parametrize("indent", ["", "   "])
+@pytest.mark.parametrize("fence", ["```", "~~~"])
+def test_fenced_target_without_real_target_creates_section_outside_code(config, indent, fence):
+    original = f"{indent}{fence}\n## Notes\n- code\n{indent}{fence}\n\n"
+    expected = original + "## Notes\n\n- new\n"
+    assert CaptureWriter(config)._insert_in_section(original, "- new", "Notes") == expected
+
+
+@pytest.mark.parametrize("newline", ["\n", "\r\n"])
+def test_unclosed_fence_refuses_capture_without_altering_journal(config, newline):
+    path = config.get_today_note_path("2026-10-29")
+    path.parent.mkdir(parents=True)
+    original = "## Notes\n- café\n```\n## Links\n".replace("\n", newline).encode()
+    path.write_bytes(original)
+    with pytest.raises(ValueError, match="unclosed code fence"):
+        CaptureWriter(config).capture("new", date_str="2026-10-29")
+    assert path.read_bytes() == original
