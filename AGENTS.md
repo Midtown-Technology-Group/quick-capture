@@ -13,3 +13,12 @@ Verify syntax against the actual Typer command, not the stale README positional 
 Preserve existing Logseq block structure, Unicode text, dates, section selection, and user content. Treat capture, interactive entry, and file-lock behavior as write surfaces. Use isolated graph/config paths for smoke checks and inspect the intended target before any authorized real capture. Do not rewrite an entire journal to append one item or discard existing content on parse errors.
 
 Read the established Logseq operating procedure before touching the user's actual graph. Avoid logging private note contents or copying them into fixtures. MSI publishing and elevated per-machine installation are distinct release/host operations. A source-only change or isolated writer test does not establish correct writes in the user's live synchronized graph.
+
+## Secret gate before publication
+
+Before every push and PR creation/update, commit the complete candidate and run
+`python3 scripts/secret_gate.py` (native Windows: `python`). Require exit 0;
+missing tooling/authentication, scan errors and skipped scans block publication.
+Then run the existing repository gates. Repeat after changing outgoing commits.
+See [secret scanning](SECRET-SCANNING.md) for base selection, new branches,
+pre-push input and prerequisites. Preserve GitGuardian App, CI and Gitleaks checks.
