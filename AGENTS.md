@@ -13,3 +13,23 @@ Verify syntax against the actual Typer command, not the stale README positional 
 Preserve existing Logseq block structure, Unicode text, dates, section selection, and user content. Treat capture, interactive entry, and file-lock behavior as write surfaces. Use isolated graph/config paths for smoke checks and inspect the intended target before any authorized real capture. Do not rewrite an entire journal to append one item or discard existing content on parse errors.
 
 Read the established Logseq operating procedure before touching the user's actual graph. Avoid logging private note contents or copying them into fixtures. MSI publishing and elevated per-machine installation are distinct release/host operations. A source-only change or isolated writer test does not establish correct writes in the user's live synchronized graph.
+
+## Secret gate before publication
+
+Before publishing the current PR branch, commit the complete candidate and run
+`python3 -I scripts/secret_gate.py --base refs/remotes/origin/main` (native Windows: `python -I`). Require exit 0;
+missing tooling/authentication, scan errors and skipped scans block publication.
+Then run the existing repository gates. Repeat after changing outgoing commits.
+Push exactly the scanned HEAD. This PR scan covers the current branch against its
+fetched intended base; other refs, multi-ref pushes and rewritten history require
+`--pre-push` with Git's complete ref-update stream. Stop if any pushed ref is
+uncovered. See [secret scanning](SECRET-SCANNING.md) for base selection, new branches,
+pre-push input and prerequisites. Preserve GitGuardian App, CI and Gitleaks checks.
+
+For a non-default PR target, fetch its destination and pass that exact ref to
+`--base`; the remote default is not a substitute for a release/maintenance base.
+
+The secret gate requires Python 3.11+ and approved ggshield >=1.56.1,<2.
+
+Explicit bases require fully qualified refs such as `refs/remotes/origin/main`
+or full commit SHAs; ambiguous short names block with exit 20.
