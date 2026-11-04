@@ -922,9 +922,11 @@ class SecretGateTests(unittest.TestCase):
             pointer.symlink_to(outside)
             return opener(path, flags)
 
-        with patch.object(secret_gate, "metadata_opener", side_effect=replace_then_open):
-            with self.assertRaises(secret_gate.GateError) as error:
-                secret_gate.metadata_text(pointer, self.repo / ".git")
+        with (
+            patch.object(secret_gate, "metadata_opener", side_effect=replace_then_open),
+            self.assertRaises(secret_gate.GateError) as error,
+        ):
+            secret_gate.metadata_text(pointer, self.repo / ".git")
         self.assertEqual(error.exception.code, 20)
 
     def test_askpass_selection_requires_external_absolute_paths(self):
