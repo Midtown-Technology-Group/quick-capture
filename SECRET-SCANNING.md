@@ -16,7 +16,8 @@ python3 -I scripts/secret_gate.py --all-history
 python3 -I scripts/test_secret_gate.py -q
 ```
 
-Use `python` instead of `python3` on native Windows. Python 3.11+, Git, and
+On native Windows, invoke the approved absolute interpreter with PowerShell:
+`& "$env:MTG_SECRET_GATE_PYTHON" -I scripts/secret_gate.py --base refs/remotes/origin/main`. Python 3.11+, Git, and
 ggshield on PATH are required. Require ggshield **>=1.56.1,<2**; this gate was tested with **1.56.1**.
 Install ggshield through the approved development-tool environment. Use existing
 native ggshield authentication or an approved process-injected
@@ -62,10 +63,10 @@ Only exit **0 / CLEAN** means a successful scanner run. Other outcomes block:
 | 1 | Findings; remediate before publication |
 | 2 | Invalid gate arguments |
 | 3 | Authentication failed/unavailable; owner must restore approved native auth |
-| 4 | Scan/transport/server/timeout error, or HEAD changed during the scan |
+| 4 | Scan/transport/server/timeout error, or HEAD/base changed between initial resolution and final verification |
 | 10 | Skipped: empty range or deletion-only input; no clean scan claimed |
 | 20 | Invalid/unavailable base, Git operation, history or hook input |
-| 21 | Required executable unavailable |
+| 21 | Missing/untrusted executable, unsupported Python, or unverifiable/unsupported ggshield version |
 
 No skip or fail-open switch is provided. Strict temporary scanner configuration
 ignores local/global exclusions and exit-zero settings; dotenv loading and scanner
@@ -122,3 +123,64 @@ Explicit `--base` accepts only a fully qualified ref (for example,
 `refs/remotes/origin/main`) or a full commit SHA. Short names such as
 `origin/main` block with exit 20 because a local branch can shadow them.
 Unsupported metadata path encodings also block with BASE_ERROR (exit 20).
+
+
+Git/scanner credential boundary: Git children launched directly by this gate do not receive ggshield credential
+variables. ggshield receives the approved API key/instance selectors, and Git
+processes launched by ggshield can inherit them.
+Git trace and executable proxy overrides are removed. Existing native Git
+configuration and credential helpers remain trusted prerequisites. Explicit
+global/system config selectors must resolve to approved absolute paths outside
+this checkout and its related worktrees; unsafe selectors block without falling
+back to another credential context. This gate is not an operating-system sandbox.
+
+Metadata reads reject non-regular records, NUL path bytes and missing registered
+worktree pointers. The opener is nonblocking where supported and validates its
+descriptor. Grafts symlinks are confined to Git metadata. An empty explicit base
+blocks rather than selecting a different destination.
+
+
+Askpass selectors follow the same external absolute-path rule as explicit Git
+configuration selectors; unsafe values block without changing authentication
+contexts. Native approved external askpass programs remain available. Git metadata
+symlinks, malformed registrations and unreadable registries block. Metadata opens
+use O_NOFOLLOW where supported; platforms without it retain pre-open confinement
+and descriptor checks. Concurrent replacement of parent directories is outside
+the gate isolation guarantee.
+
+The Python interpreter is a trusted bootstrap prerequisite. Use an approved
+installation outside all repository checkouts. On Windows, use its absolute path
+for direct invocations (for example, `& "$env:MTG_SECRET_GATE_PYTHON" -I scripts/secret_gate.py --base refs/remotes/origin/main`).
+Set that variable to the existing approved installation; it is not a credential.
+
+
+Tool candidates are checked against their own Git association as well as the
+registered roots. A stale or rewritten registration cannot admit a scanner while its
+Git-file, directory or common-directory association still identifies it as
+a linked checkout. Obsolete registrations are left untouched; this gate does not
+prune other tasks worktree metadata.
+
+
+Windows Make/Just gate targets require MTG_SECRET_GATE_PYTHON to name an existing
+approved absolute Python installation outside all Git checkouts. Configure the
+selector in the trusted caller environment, never from checkout-provided values.
+Unix direct entrypoints require the same approved interpreter prerequisite.
+
+
+Tool association follows commondir for both Git-file and directory metadata.
+Inaccessible PATH candidates are excluded using explicit lstat calls, including
+on Python versions whose type predicates suppress permission errors.
+
+Approved installation trust boundary: tool ownership checks do not establish
+executable provenance. Supply approved external installations through the trusted
+caller PATH, never checkout-provided environment values. If both a checkout
+marker and its registration are removed or rewritten, the gate cannot reconstruct
+that former ownership from an ordinary directory. Tampering with approved tool
+installations or their caller environment is outside this gate guarantee.
+Obsolete shared worktree registrations are left untouched.
+
+An explicitly empty GIT_ASKPASS is preserved as native Git's helper-disable
+value; it is never removed to select a different credential context. An empty
+SSH_ASKPASS still blocks with exit 20 under this gate's explicit SSH-selector
+contract. Other explicit selectors require approved external absolute
+paths. Do not alter authentication selectors merely to obtain a clean scan.
