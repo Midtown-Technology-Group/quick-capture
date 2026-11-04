@@ -832,7 +832,7 @@ class SecretGateTests(unittest.TestCase):
 
     def test_malformed_metadata_is_classified_before_scanning(self):
         """NUL path bytes are metadata errors, without raw diagnostics."""
-        pointer = self.repo / ".git/worktrees/nul/gitdir"
+        pointer = self.repo / ".git/worktrees/invalid-path-record/gitdir"
         pointer.parent.mkdir(parents=True)
         pointer.write_bytes(b"bad\0path/.git\n")
         result = self.run_gate("--base", self.base)
